@@ -1,0 +1,123 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Cirrus
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /enrolle/user:
+    x-swagger-router-controller: enrollement
+    post:
+      description: Enrolle user in Cirrus word..
+      operationId: enrolleUser
+      parameters:
+        - name: user
+          required: true
+          in: body
+          description: The name of the person to whom to say hello
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/User"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /enrolle/device:
+    x-swagger-router-controller: enrollement
+    post:
+      description: Enrolle user in Cirrus word..
+      operationId: enrolle_device
+      parameters:
+        - name: user
+          required: true
+          in: body
+          description: The name of the person to whom to say hello
+          schema:
+            $ref: "#/definitions/Device"
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/Response"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+definitions:
+  User:
+    required:
+      - name
+      - surname
+      - email
+      - mobile
+    properties:
+      uid:
+        type: integer
+        format: int64
+      name:
+        type: string
+      surname:
+        type: string
+      email:
+        type : string
+      mobile:
+        type : string
+      role:
+        type: string
+        enum: [Admin, Kid, Family]
+      relay_tag:
+        type: string
+      community:
+        type: string
+      devices:
+        type: array
+        items:
+          $ref: "#/definitions/Device"
+        
+  Device:
+    required:
+      - name
+      - mac
+      - type
+    properties:
+      name:
+        type: string
+      mac:
+        type: string
+      type:
+        type: string
+  
+  Response:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
